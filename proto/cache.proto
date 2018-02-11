@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/any.proto";
+
+message Cache {
+  string name = 1;
+  int64 duration = 2;
+  int64 interval = 3;
+}
+
+message CacheKeys {
+  repeated string keys = 1;
+}
+
+message CacheResponse {
+  string message = 1;
+  string error = 2;
+}
+
+message CacheObj {
+  Cache cache = 1;
+  string key = 2;
+  google.protobuf.Any value = 3;
+  int32 duration = 4;
+}
+message CacheValue {
+  string value = 1;
+}
+
+message Empty {}
+
+message CacheList {
+  repeated Cache caches = 1;
+}
+service CacheService {
+  rpc MakeCache (Cache) returns (CacheResponse) {}
+  rpc ListCache (Empty) returns (CacheList) {}
+  rpc DelCache (Cache) returns (CacheResponse) {}
+
+  rpc CacheAdd (CacheObj) returns (CacheResponse);
+  rpc CacheGet (CacheObj) returns (CacheValue);
+  rpc CacheSet (CacheObj) returns (CacheResponse);
+  rpc CacheUpdate (CacheObj) returns (CacheResponse);
+  rpc CacheDelete (CacheObj) returns (CacheResponse);
+}
